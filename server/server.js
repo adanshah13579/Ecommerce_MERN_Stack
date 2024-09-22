@@ -18,7 +18,7 @@ import adminOrderRouter from "./routes/admin/order-routes.js";
 import commonFeatureRouter from "./routes/common/feature-routes.js";
 
 mongoose
-  .connect("mongodb+srv://adanshah13579:Ecom123@clusterecom.4tfbe.mongodb.net/")
+  .connect(process.env.MONGODB_URL)
   .then(() => console.log("MongoDB Connected"))
   .catch((error) => console.log("Error connecting to MongoDB:", error));
 
