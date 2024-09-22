@@ -1,0 +1,6 @@
+CLIENT_BASE_URL=http://localhost:5174
+CLOUD_NAME=dzclypj97
+API_KEY=955756829328738
+API_SECRET_KEY=mp7t8197M51sRX_vfHpfxC9pGSk
+PORT=5000
+MONGODB_URL=mongodb+srv://adanshah13579:Ecom123@clusterecom.4tfbe.mongodb.net/
