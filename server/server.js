@@ -17,34 +17,36 @@ import shopReviewRouter from "./routes/shop/review-routes.js";
 import adminOrderRouter from "./routes/admin/order-routes.js";
 import commonFeatureRouter from "./routes/common/feature-routes.js";
 
+// Connect to MongoDB
 mongoose
-  .connect(process.env.MONGODB_URL)
+  .connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB Connected"))
   .catch((error) => console.log("Error connecting to MongoDB:", error));
 
 const app = express();
-
 const PORT = process.env.PORT || 5000;
 
+// CORS Configuration
 app.use(
   cors({
-    origin: process.env.CLIENT_BASE_URL,
+    origin: process.env.CLIENT_BASE_URL, // Ensure this is set to your frontend URL
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
-      "Content-type",
+      "Content-Type", 
       "Authorization",
       "Cache-Control",
       "Expires",
-      "Pragma",
+      "Pragma"
     ],
     credentials: true,
   })
 );
 
+// Middleware
 app.use(cookieParser());
 app.use(express.json());
 
-// Define routes
+// Routes
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter);
 app.use("/api/shop/products", shopProductsRouter);
@@ -56,4 +58,10 @@ app.use("/api/shop/search", shopSearchRouter);
 app.use("/api/shop/review", shopReviewRouter);
 app.use("/api/common/feature", commonFeatureRouter);
 
+// Default Route for Health Check
+app.get("/", (req, res) => {
+  res.send("Server is running");
+});
+
+// Start Server
 app.listen(PORT, () => console.log(`SERVER is running on Port ${PORT}`));
