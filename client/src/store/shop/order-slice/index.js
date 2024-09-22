@@ -13,20 +13,18 @@ export const createNewOrder = createAsyncThunk(
   "/order/createNewOrder",
   async (orderData) => {
     const response = await axios.post(
-      `${import.meta.env.API_VITE_URL}/api/shop/order/create`,
+      `${import.meta.env.VITE_API_URL}/api/shop/order/create`,
       orderData
     );
     return response.data;
   }
 );
 
-
-
 export const getAllOrdersByUserId = createAsyncThunk(
   "/order/getAllOrdersByUserId",
   async (userId) => {
     const response = await axios.get(
-      `${import.meta.env.API_VITE_URL}/api/shop/order/list/${userId}`
+      `${import.meta.env.VITE_API_URL}/api/shop/order/list/${userId}`
     );
 
     return response.data;
@@ -37,7 +35,7 @@ export const getOrderDetails = createAsyncThunk(
   "/order/getOrderDetails",
   async (id) => {
     const response = await axios.get(
-      `${import.meta.env.API_VITE_URL}/api/shop/order/details/${id}`
+      `${import.meta.env.VITE_API_URL}/api/shop/order/details/${id}`
     );
 
     return response.data;
@@ -50,7 +48,6 @@ const shoppingOrderSlice = createSlice({
   reducers: {
     resetOrderDetails: (state) => {
       state.orderDetails = null;
-      
     },
   },
   extraReducers: (builder) => {
