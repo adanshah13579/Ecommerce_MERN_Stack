@@ -44,7 +44,15 @@ function AdminOrderDetailsView({ orderDetails }) {
 
   return (
     <DialogContent className="sm:max-w-[600px]">
-      <div className="grid gap-6">
+      <style>
+        {`
+          .scrollable {
+            max-height: 500px; /* Set the maximum height */
+            overflow-y: auto; /* Enable vertical scrolling */
+          }
+        `}
+      </style>
+      <div className="grid gap-4 scrollable">
         <div className="grid gap-2">
           <div className="flex mt-6 items-center justify-between">
             <p className="font-medium">Order ID</p>
@@ -87,7 +95,7 @@ function AdminOrderDetailsView({ orderDetails }) {
             <ul className="grid gap-3">
               {orderDetails?.cartItems && orderDetails?.cartItems.length > 0
                 ? orderDetails?.cartItems.map((item) => (
-                    <li className="flex items-center justify-between">
+                    <li key={item._id} className="flex items-center justify-between">
                       <span>Title: {item.title}</span>
                       <span>Quantity: {item.quantity}</span>
                       <span>Price: Rs:{item.price}</span>
@@ -113,20 +121,18 @@ function AdminOrderDetailsView({ orderDetails }) {
 
         <div>
           <CommonForm
-            formControls={[
-              {
-                label: "Order Status",
-                name: "status",
-                componentType: "select",
-                options: [
-                  { id: "pending", label: "Pending" },
-                  { id: "inProcess", label: "In Process" },
-                  { id: "inShipping", label: "In Shipping" },
-                  { id: "delivered", label: "Delivered" },
-                  { id: "rejected", label: "Rejected" },
-                ],
-              },
-            ]}
+            formControls={[{
+              label: "Order Status",
+              name: "status",
+              componentType: "select",
+              options: [
+                { id: "pending", label: "Pending" },
+                { id: "inProcess", label: "In Process" },
+                { id: "inShipping", label: "In Shipping" },
+                { id: "delivered", label: "Delivered" },
+                { id: "rejected", label: "Rejected" },
+              ],
+            }]}
             formData={formData}
             setFormData={setFormData}
             buttonText={"Update Order Status"}
