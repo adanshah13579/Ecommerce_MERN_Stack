@@ -74,7 +74,7 @@ function HeaderRightContent() {
 
   function handleLogout() {
     // dispatch(logoutUser());
-    dispatch(resetcreden)
+    dispatch(resetcreden())
     sessionStorage.clear()
     navigate("/auth/login")
   }

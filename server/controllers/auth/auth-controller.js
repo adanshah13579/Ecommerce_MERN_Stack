@@ -83,8 +83,8 @@ export const loginUser = async (req, res) => {
     // });
 
     res.status(200).json({
-      success:true,
-      message:"LOGIN Successfully",
+      success: true,
+      message: "LOGIN Successfully",
       token,
       user: {
         email: checkUser.email,
@@ -92,9 +92,7 @@ export const loginUser = async (req, res) => {
         id: checkUser._id,
         userName: checkUser.userName,
       },
-
-
-    })
+    });
   } catch (e) {
     console.log(e);
     res.status(500).json({
@@ -133,24 +131,31 @@ export const logoutUser = (req, res) => {
 //     });
 //   }
 // };
+
 export const authMiddleware = async (req, res, next) => {
-  const authheader = req.headers['Authorization'];
-  const token= authheader&&authheader.split('')[1]
+  // Access the Authorization header
+  const authHeader = req.headers["authorization"]; // Change to lowercase to avoid issues
+  // Split the header to get the token
+  const token = authHeader && authHeader.split(" ")[1]; // Correctly split on space
+
+  // Check if token is present
   if (!token) {
     return res.status(401).json({
       success: false,
-      message: "Unauthorized user!",
+      message: "Unauthorized user! No token provided.",
     });
   }
 
   try {
-    const decoded = jwt.verify(token, "CLIENT_SECRET_KEY");
-    req.user = decoded;
-    next();
+    // Verify the token
+    const decoded = jwt.verify(token, "CLIENT_SECRET_KEY"); // Use the actual secret key
+    req.user = decoded; // Attach the decoded user to the request object
+    next(); // Move to the next middleware or route handler
   } catch (error) {
-    res.status(401).json({
+    console.error("Token verification error:", error); // Log the error for debugging
+    return res.status(401).json({
       success: false,
-      message: "Unauthorized user!",
+      message: "Unauthorized user! Token verification failed.",
     });
   }
 };
