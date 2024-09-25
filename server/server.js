@@ -25,10 +25,9 @@ mongoose
 const app = express();
 
 const PORT = process.env.PORT;
-app.get('/', (req, res) => {
-  res.send('API is running...');
+app.get("/", (req, res) => {
+  res.send("API is running...");
 });
-
 
 app.use(
   cors({
