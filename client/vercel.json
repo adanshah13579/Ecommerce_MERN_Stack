@@ -5,22 +5,27 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist" 
+        "distDir": "dist"  
       }
     }
   ],
   "routes": [
     {
       "src": "/assets/(.*)",
-      "dest": "/assets/$1"
+      "dest": "/assets/$1"   
     },
     {
-      "src": "/api/(.*)", 
-      "dest": "https://ecommerce-mern-stack-pjtl.vercel.app/api/$1"
+      "src": "/static/(.*)",   
+      "dest": "/static/$1"
     },
     {
-      "src": "/(.*)", 
-      "dest": "/index.html"
+      "src": "/api/(.*)",
+      "dest": "https://ecommerce-mern-stack-pjtl.vercel.app/api/$1"   
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"    
     }
   ]
 }
+
