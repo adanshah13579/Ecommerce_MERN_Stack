@@ -4,6 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import path from "path"; // Add this for handling paths
 
 // Routes
 import authRouter from "./routes/auth/auth-routes.js";
@@ -17,18 +18,21 @@ import shopReviewRouter from "./routes/shop/review-routes.js";
 import adminOrderRouter from "./routes/admin/order-routes.js";
 import commonFeatureRouter from "./routes/common/feature-routes.js";
 
+// Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URL)
   .then(() => console.log("MongoDB Connected"))
   .catch((error) => console.log("Error connecting to MongoDB:", error));
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-const PORT = process.env.PORT;
+// Basic root route
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
+// Enable CORS
 app.use(
   cors({
     origin: process.env.CLIENT_BASE_URL,
@@ -44,10 +48,11 @@ app.use(
   })
 );
 
+// Middleware
 app.use(cookieParser());
 app.use(express.json());
 
-// Define routes
+// API Routes
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter);
 app.use("/api/shop/products", shopProductsRouter);
@@ -59,4 +64,13 @@ app.use("/api/shop/search", shopSearchRouter);
 app.use("/api/shop/review", shopReviewRouter);
 app.use("/api/common/feature", commonFeatureRouter);
 
+// Serve the static frontend files
+app.use(express.static(path.join(__dirname, "client/dist")));
+
+// Handle client-side routing for frontend
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+});
+
+// Start the server
 app.listen(PORT, () => console.log(`SERVER is running on Port ${PORT}`));
