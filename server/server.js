@@ -4,7 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import path from "path"; // Add this for handling paths
+import path from "path"; // Import path
 
 // Routes
 import authRouter from "./routes/auth/auth-routes.js";
@@ -25,14 +25,26 @@ mongoose
   .catch((error) => console.log("Error connecting to MongoDB:", error));
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
-// Basic root route
+// Serve static files from the client
+if (process.env.NODE_ENV === "production") {
+  const __dirname = path.dirname(new URL(import.meta.url).pathname); // Create __dirname
+
+  app.use(express.static(path.join(__dirname, "client/dist")));
+
+  // Serve the index.html for all other requests
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+  });
+}
+
+// Basic route for API
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// Enable CORS
+// CORS configuration
 app.use(
   cors({
     origin: process.env.CLIENT_BASE_URL,
@@ -48,11 +60,10 @@ app.use(
   })
 );
 
-// Middleware
 app.use(cookieParser());
 app.use(express.json());
 
-// API Routes
+// Define routes
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter);
 app.use("/api/shop/products", shopProductsRouter);
@@ -64,13 +75,5 @@ app.use("/api/shop/search", shopSearchRouter);
 app.use("/api/shop/review", shopReviewRouter);
 app.use("/api/common/feature", commonFeatureRouter);
 
-// Serve the static frontend files
-app.use(express.static(path.join(__dirname, "client/dist")));
-
-// Handle client-side routing for frontend
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
-});
-
-// Start the server
+// Start server
 app.listen(PORT, () => console.log(`SERVER is running on Port ${PORT}`));
