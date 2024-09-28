@@ -1,3 +1,4 @@
+// Import necessary modules
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
@@ -6,7 +7,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path"; // Import path
 
-// Routes
+// Import Routes
 import authRouter from "./routes/auth/auth-routes.js";
 import adminProductsRouter from "./routes/admin/products-routes.js";
 import shopProductsRouter from "./routes/shop/products-routes.js";
@@ -24,14 +25,18 @@ mongoose
   .then(() => console.log("MongoDB Connected"))
   .catch((error) => console.log("Error connecting to MongoDB:", error));
 
+// Initialize Express app
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000; // Use PORT from environment or default to 5000
 
-// Serve static files from the client
+// Serve static files from the client in production
 if (process.env.NODE_ENV === "production") {
-  const __dirname = path.dirname(new URL(import.meta.url).pathname); // Create __dirname
+  // Get directory name
+  const __filename = new URL(import.meta.url).pathname; 
+  const __dirname = path.dirname(__filename); 
 
-  app.use(express.static(path.join(__dirname, "client/dist")));
+  // Serve static files from client/dist
+  app.use(express.static(path.join(__dirname, "client", "dist")));
 
   // Serve the index.html for all other requests
   app.get("*", (req, res) => {
@@ -47,7 +52,7 @@ app.get("/", (req, res) => {
 // CORS configuration
 app.use(
   cors({
-    origin: process.env.CLIENT_BASE_URL,
+    origin: process.env.CLIENT_BASE_URL, // Ensure this is set in your .env
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
       "Content-type",
@@ -60,10 +65,11 @@ app.use(
   })
 );
 
+// Middleware
 app.use(cookieParser());
 app.use(express.json());
 
-// Define routes
+// Define API routes
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter);
 app.use("/api/shop/products", shopProductsRouter);
